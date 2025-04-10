@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -9,13 +10,12 @@ const productRoutes = require('./routes/productRoutes');
 const Product = require('./models/Product');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;  // استخدم المنفذ من ملف .env أو 3000 كافتراضي
 
 // إعداد multer لتخزين الملفات
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.join(__dirname, 'public', 'uploads/')); // ✅
-        // تحديد المسار الذي سيتم تخزين الصور فيه
     },
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}${path.extname(file.originalname)}`); // حفظ الصورة مع توقيت فريد
@@ -25,7 +25,7 @@ const upload = multer({ storage: storage });
 
 // إعداد الجلسة
 app.use(session({
-    secret: 'secretkey',
+    secret: process.env.SESSION_SECRET,  // استخدم السر من ملف .env
     resave: false,
     saveUninitialized: true
 }));
@@ -35,7 +35,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public'))); // السماح للوصول إلى مجلد public
 
 // الاتصال بقاعدة البيانات MongoDB
-mongoose.connect('mongodb+srv://mohamed3wara:8tarSvYeLukiXbWZ@products-api.i1brd.mongodb.net/', {
+mongoose.connect(process.env.MONGO_URI, {  // استخدم رابط الاتصال من ملف .env
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
@@ -140,6 +140,7 @@ app.post('/api/logout', (req, res) => {
         res.json({ message: 'تم تسجيل الخروج' });
     });
 });
+
 app.get('/api/products', async (req, res) => {
     try {
         const products = await Product.find();
@@ -148,7 +149,6 @@ app.get('/api/products', async (req, res) => {
         res.status(500).json({ message: 'حدث خطأ في جلب المنتجات' });
     }
 });
-
 
 // بدء الخادم
 app.listen(PORT, () => {
