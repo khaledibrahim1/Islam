@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>متجرنا - قائمة المنتجات</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #4a6fa5;
+      --secondary-color: #166088;
+      --accent-color: #4fc3f7;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+      --success-color: #28a745;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Tajawal', Arial, sans-serif;
+      background-color: #f5f7fa;
+      color: var(--dark-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
+      margin-bottom: 30px;
+      box-shadow: var(--box-shadow);
+    }
+    
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+    
+    .search-filter {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      gap: 15px;
+    }
+    
+    .search-box {
+      flex: 1;
+      position: relative;
+    }
+    
+    .search-box input {
+      width: 100%;
+      padding: 12px 20px 12px 45px;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.2);
+    }
+    
+    .search-box i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #777;
+    }
+    
+    .filter-btn {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      padding: 0 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+    }
+    
+    .filter-btn:hover {
+      background-color: #f1f1f1;
+    }
+    
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+    }
+    
+    .product-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .product-badge {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: var(--success-color);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      z-index: 1;
+    }
+    
+    .product-image {
+      height: 200px;
+      width: 100%;
+      object-fit: cover;
+      border-bottom: 1px solid #eee;
+    }
+    
+    .product-info {
+      padding: 20px;
+    }
+    
+    .product-title {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      color: var(--dark-color);
+      font-weight: 600;
+    }
+    
+    .product-description {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .product-price {
+      font-size: 1.3rem;
+      color: var(--secondary-color);
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+    
+    .product-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    
+    .btn {
+      padding: 10px 15px;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+      flex: 1;
+    }
+    
+    .btn-primary:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    .btn-secondary {
+      background-color: #e9ecef;
+      color: var(--dark-color);
+    }
+    
+    .btn-secondary:hover {
+      background-color: #dee2e6;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 50px 20px;
+      grid-column: 1 / -1;
+    }
+    
+    .empty-state i {
+      font-size: 3rem;
+      color: #ccc;
+      margin-bottom: 20px;
+    }
+    
+    .error-state {
+      text-align: center;
+      padding: 50px 20px;
+      grid-column: 1 / -1;
+      color: #dc3545;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 50px 20px;
+      grid-column: 1 / -1;
+    }
+    
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border-left-color: var(--primary-color);
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @media (max-width: 768px) {
+      .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+      
+      .search-filter {
+        flex-direction: column;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1><i class="fas fa-store-alt"></i> متجرنا الإلكتروني</h1>
+      <p>اكتشف أحدث المنتجات لدينا</p>
+    </div>
+  </header>
+  
+  <main class="container">
+    <div class="search-filter">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="ابحث عن منتج...">
+      </div>
+      <button class="filter-btn">
+        <i class="fas fa-filter"></i>
+        تصفية
+      </button>
+    </div>
+    
+    <div class="product-grid" id="productList">
+      <!-- سيتم ملؤها بواسطة الجافاسكريبت -->
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>جاري تحميل المنتجات...</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    async function loadProducts() {
+      const productList = document.getElementById('productList');
+      
+      try {
+        const res = await fetch('/api/products');
+        if (!res.ok) {
+          throw new Error('فشل في تحميل المنتجات: ' + res.status);
+        }
+
+        const products = await res.json();
+        console.log('Received products:', products);
+        
+        productList.innerHTML = '';
+
+        if (!products || products.length === 0) {
+          productList.innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-box-open"></i>
+              <h3>لا توجد منتجات حالياً</h3>
+              <p>لم يتم العثور على أي منتجات في المتجر حالياً.</p>
+            </div>
+          `;
+          return;
+        }
+
+        products.forEach(p => {
+          const productImage = p.image ? 
+            `<img src="${p.image.replace(/\\/g, '/')}" alt="${p.name}" class="product-image">` : 
+            '<div class="product-image" style="background: #eee; display: flex; align-items: center; justify-content: center;"><i class="fas fa-image" style="font-size: 2rem; color: #ccc;"></i></div>';
+          
+          const productId = p._id ? p._id : 'no-id';
+          const productPrice = p.price ? p.price.toLocaleString() : '0';
+          
+          productList.innerHTML += `
+            <div class="product-card">
+              ${p.discount ? '<span class="product-badge">خصم ' + p.discount + '%</span>' : ''}
+              ${productImage}
+              <div class="product-info">
+                <h3 class="product-title">
+                  <a href="/product/${productId}" style="color: inherit; text-decoration: none;">${p.name || 'بدون اسم'}</a>
+                </h3>
+                <p class="product-description">${p.description || 'لا يوجد وصف متاح لهذا المنتج'}</p>
+                <div class="product-price">${productPrice} جنيه</div>
+                <div class="product-actions">
+                  <button class="btn btn-primary">
+                    <i class="fas fa-shopping-cart"></i> أضف للسلة
+                  </button>
+                  <button class="btn btn-secondary">
+                    <i class="far fa-heart"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      } catch (error) {
+        console.error('Error loading products:', error);
+        productList.innerHTML = `
+          <div class="error-state">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>حدث خطأ في تحميل المنتجات</h3>
+            <p>${error.message}</p>
+            <button class="btn btn-primary" onclick="loadProducts()">
+              <i class="fas fa-sync-alt"></i> إعادة المحاولة
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // استدعاء الوظيفة عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', loadProducts);
+  </script>
+</body>
+</html>
