@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تفاصيل المنتج | متجرنا الإلكتروني</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #4a6fa5;
+      --secondary-color: #166088;
+      --accent-color: #4fc3f7;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+      --success-color: #28a745;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Tajawal', Arial, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: var(--dark-color);
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 15px 0;
+      margin-bottom: 30px;
+      box-shadow: var(--box-shadow);
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-outline-light {
+      background: transparent;
+      color: white;
+      border: 1px solid white;
+    }
+    
+    .btn-outline-light:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .btn-whatsapp {
+      background-color: #25D366;
+      color: white;
+    }
+    
+    .btn-whatsapp:hover {
+      background-color: #128C7E;
+    }
+    
+    /* قسم تفاصيل المنتج */
+    .product-detail {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      background: white;
+      border-radius: var(--border-radius);
+      padding: 30px;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 40px;
+    }
+    
+    .product-image-container {
+      position: relative;
+      text-align: center;
+    }
+    
+    .product-image {
+      max-width: 100%;
+      max-height: 400px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: var(--border-radius);
+      border: 1px solid #eee;
+      padding: 10px;
+      background: white;
+    }
+    
+    .product-info {
+      padding: 20px 0;
+    }
+    
+    .product-title {
+      font-size: 2rem;
+      color: var(--secondary-color);
+      margin-bottom: 15px;
+    }
+    
+    .product-price {
+      font-size: 1.8rem;
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+    
+    .product-description {
+      color: #555;
+      margin-bottom: 25px;
+      line-height: 1.8;
+      text-align: right;
+    }
+    
+    .product-meta {
+      margin-bottom: 25px;
+      text-align: right;
+    }
+    
+    .meta-item {
+      display: flex;
+      margin-bottom: 10px;
+      justify-content: flex-end;
+    }
+    
+    .meta-label {
+      font-weight: 600;
+      width: 120px;
+      color: var(--secondary-color);
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .btn-lg {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+    }
+    
+    /* حالات خاصة */
+    .loading, .error {
+      text-align: center;
+      padding: 50px;
+      font-size: 1.2rem;
+    }
+    
+    .loading i, .error i {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    
+    .error {
+      color: #dc3545;
+    }
+    
+    @media (max-width: 768px) {
+      .product-detail {
+        grid-template-columns: 1fr;
+      }
+      
+      .product-image {
+        max-height: 300px;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <div class="logo">متجرنا</div>
+      <button class="btn btn-outline-light" onclick="goBack()">
+        <i class="fas fa-arrow-right"></i> العودة
+      </button>
+    </div>
+  </header>
+  
+  <main class="container">
+    <div id="productContainer">
+      <div class="loading">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>جاري تحميل تفاصيل المنتج...</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const pathParts = window.location.pathname.split('/');
+    const productId = pathParts[pathParts.length - 1];
+    const whatsappNumber = "+201023230170";
+    
+    if (!productId) {
+      document.getElementById('productContainer').innerHTML = `
+        <div class="error">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>حدث خطأ: لم يتم العثور على المنتج</p>
+          <button class="btn btn-primary" onclick="window.location.href='/'">
+            <i class="fas fa-home"></i> العودة للصفحة الرئيسية
+          </button>
+        </div>
+      `;
+    }
+
+    // تحميل تفاصيل المنتج
+    async function loadProductDetails() {
+      try {
+        const res = await fetch(`/api/products/${productId}`);
+        
+        if (!res.ok) {
+          throw new Error(`حدث خطأ: ${res.statusText}`);
+        }
+        
+        const product = await res.json();
+        renderProductDetails(product);
+      } catch (error) {
+        console.error('Error loading product:', error);
+        document.getElementById('productContainer').innerHTML = `
+          <div class="error">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>${error.message}</p>
+            <button class="btn btn-primary" onclick="window.location.href='/'">
+              <i class="fas fa-home"></i> العودة للصفحة الرئيسية
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // عرض تفاصيل المنتج
+    function renderProductDetails(product) {
+      // إصلاح مسار الصورة إذا كان يحتوي على backslashes
+      let productImage = product.image ? product.image.replace(/\\/g, '/') : 'https://via.placeholder.com/600x400?text=No+Image';
+      
+      // إذا كان مسار الصورة لا يبدأ بـ http، نضيف المسار الأساسي
+      if (!productImage.startsWith('http') && !productImage.startsWith('/')) {
+        productImage = '/' + productImage;
+      }
+      
+      document.getElementById('productContainer').innerHTML = `
+        <div class="product-detail">
+          <div class="product-image-container">
+            <img src="${productImage}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
+          </div>
+          
+          <div class="product-info">
+            <h1 class="product-title">${product.name}</h1>
+            <div class="product-price">${product.price ? product.price.toLocaleString() + ' جنيه' : 'غير متوفر'}</div>
+            
+            <div class="product-meta">
+              <div class="meta-item">
+                <span class="meta-label">التوفر:</span>
+                <span>${product.stock > 0 ? 'متوفر' : 'غير متوفر'}</span>
+              </div>
+            </div>
+            
+            <p class="product-description">${product.description || 'لا يوجد وصف متاح لهذا المنتج'}</p>
+            
+            <div class="action-buttons">
+              <button class="btn btn-whatsapp btn-lg" onclick="contactOnWhatsApp('${product.name}', ${product.price || 0}, '${product.description || ''}', '${productImage}')">
+                <i class="fab fa-whatsapp"></i> التواصل عبر واتساب
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // التواصل عبر واتساب
+    function contactOnWhatsApp(productName, productPrice, productDescription, productImage) {
+      const message = `مرحباً، أنا مهتم بالمنتج التالي:
+      
+*${productName}*
+السعر: ${productPrice.toLocaleString()} جنيه
+
+${productDescription}
+
+${productImage && productImage.includes('http') ? `رابط صورة المنتج: ${productImage}` : ''}
+
+الرجاء التواصل معي لاستكمال الطلب.`;
+      
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+      
+      window.open(whatsappUrl, '_blank');
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    // تحميل البيانات عند بدء الصفحة
+    document.addEventListener('DOMContentLoaded', loadProductDetails);
+  </script>
+</body>
+</html>
