@@ -35,7 +35,7 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public'))); // السماح للوصول إلى مجلد public
 
 // الاتصال بقاعدة البيانات MongoDB
-mongoose.connect('mongodb://localhost:27017/productdb', {
+mongoose.connect('mongodb+srv://mohamed3wara:8tarSvYeLukiXbWZ@products-api.i1brd.mongodb.net/', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
